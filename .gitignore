@@ -1,0 +1,5 @@
+.idea
+*.pyc
+Pipfile
+db.sqlite3
+configVipRealty/local_settings.py

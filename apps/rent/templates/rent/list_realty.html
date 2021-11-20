@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>List view realty</h3>
+<form action="" method="get">
+    {{ form.as_p }}
+    <input type="submit" value="Поиск">
+</form>
+
+{% for real in realty %}
+<p><a href="{% url 'rent:detail_real' real.pk %}">{{ real.street }},
+    {{ real.city }}, {{ real.rent }}</a></p>
+{% endfor %}
+
+</body>
+</html>
