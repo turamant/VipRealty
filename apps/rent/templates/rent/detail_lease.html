@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Detail</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
+
 <h3>Detail</h3>
 <h3>lease</h3>
 <p>{{ lease.lease_number }}</p>
@@ -17,5 +14,5 @@
 <p>{{ lease.rent_start }}</p>
 <p>{{ lease.rent_finish }}</p>
 <p>{{ lease.duration }}</p>
-</body>
-</html>
+
+{% endblock %}

@@ -1,7 +1,7 @@
 from django import forms
 
 
-class RealtyFilterForm(forms.Form):
+class PropertyFilterForm(forms.Form):
     min_rent = forms.FloatField(label='rent от', required=False)
     max_rent = forms.FloatField(label='rent до', required=False)
     min_rooms = forms.IntegerField(label='room от', required=False)

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>Detail</h3>
+<h3>Объект недвижимости</h3>
+<p><b>Номер в БД:</b>{{ real.property_number }}</p>
+<p>улица: {{ real.street }}</p>
+<p>город: {{ real.city }}</p>
+<p>индекс: {{ real.postcode }}</p>
+<p>категория: {{ real.category }}</p>
+<p>комнаты: {{ real.rooms }}</p>
+<p><b>цена ренты:</b> {{ real.rent }}</p>
+<p>хозяин: {{ real.owner_number }}</p>
+
+<h3>Заявка на эту квартиру от случайного клиента </h3>
+{% if sended %}
+    Спасибо, ваша заявка принята!
+{% endif %}
+<form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit">Отправить</button>
+
+</form>
+
+{% endblock %}

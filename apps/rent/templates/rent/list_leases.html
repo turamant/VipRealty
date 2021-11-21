@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+
+{% extends "base.html" %}
+
+{% block content %}
+
 <h3>List view leases</h3>
 {% for lease in leases %}
 <p><a href="{% url 'rent:detail_lease' lease.pk %}">{{ lease.lease_number }}</a></p>
 {% endfor %}
-</body>
-</html>
+
+{% endblock content %}

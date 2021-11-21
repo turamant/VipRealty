@@ -1,0 +1,32 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<h3>List view staff</h3>
+<table>
+<tr>
+    <td>Имя</td>
+    <td>Фамилия</td>
+    <td>Должность</td>
+    <td>Пол</td>
+    <td>День рождения</td>
+    <td>Зарплата</td>
+    <td>Филиал</td>
+  </tr>
+
+{% for person in staff %}
+    <tr>
+<td><a href="{% url 'branch:detail_staff' person.pk %}">{{ person.staff_number }}</a>
+{{ person.first_name }}
+{{ person.last_name }}
+{{ person.position }}
+{{ person.sex }}
+{{ person.date_of_birth }}
+    {{ person.salary }}</td>
+</tr>
+{% endfor %}
+
+</table>
+<div>ИТОГО : {{ salary_all }}</div>
+
+
+{% endblock %}

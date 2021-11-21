@@ -1,43 +1,30 @@
 from django.db import models
 
-class City(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-class Street(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=City)
-
-    def __str__(self):
-        return self.name
-
-class Type(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
-
-class Room(models.Model):
-    number = models.PositiveSmallIntegerField(2)
-
-    def __str__(self):
-        return str(self.number)
-
-
 # Отдел реализации
+from apps.branch.models import Staff, Branch
+from apps.thesaurus.models import Street, City, Room, Payment, Category
 
-class Realty(models.Model):
+
+class Property(models.Model):
     property_number = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
-    street = models.ForeignKey(Street, on_delete=models.CASCADE, related_name='realties')
-    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='realties')
+    street = models.ForeignKey(Street, on_delete=models.CASCADE,
+                               related_name='properties')
+    city = models.ForeignKey(City, on_delete=models.CASCADE,
+                             related_name='properties')
     postcode = models.CharField(max_length=6, unique=True)
-    type = models.ForeignKey(Type, on_delete=models.CASCADE, related_name='realties')
-    rooms = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='realties')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                 related_name='realties')
+    rooms = models.ForeignKey(Room, on_delete=models.CASCADE,
+                              related_name='realties')
     rent = models.FloatField()
-    owner_number = models.ForeignKey('PrivateOwner', on_delete=models.CASCADE, related_name='realties')
+    owner_number = models.ForeignKey('PrivateOwner', on_delete=models.CASCADE,
+                                     related_name='realties')
+    staff_number = models.ForeignKey(Staff, on_delete=models.CASCADE,
+                                     related_name='realties')
+    branch_number = models.ForeignKey(Branch, on_delete=models.CASCADE,
+                                      related_name='realties')
+
 
     class Meta:
         ordering = ('rooms',)
@@ -63,9 +50,8 @@ class Client(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    address = models.ForeignKey(Street, on_delete=models.CASCADE, related_name='clients')
     tel_number = models.CharField(max_length=12)
-    pref_type = models.ForeignKey(Type, on_delete=models.CASCADE, related_name='clients')
+    pref_type = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='clients')
     pref_rooms = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='clients')
     max_rent = models.FloatField()
 
@@ -75,13 +61,6 @@ class Client(models.Model):
 
 
 # Отдел контрактов
-
-class Payment(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
 
 class Lease(models.Model):
     PAID = 'yes'
@@ -105,6 +84,32 @@ class Lease(models.Model):
     def __str__(self):
         return self.lease_number
 
+class Viewing(models.Model):
+    client_number = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='viewings')
+    property_number = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='viewings')
+    view_date = models.DateField()
+    comment = models.CharField('комментарий', max_length=255)
+
+    class Meta:
+        ordering = ('-view_date',)
+
+    def __str__(self):
+        return self.client_number.last_name
+
+class Registration(models.Model):
+    client_number = models.ForeignKey(Client, on_delete=models.CASCADE,
+                                      related_name='registrations')
+    branch_number = models.ForeignKey(Branch, on_delete=models.CASCADE,
+                                      related_name='registrations')
+    staff_number = models.ForeignKey(Staff, on_delete=models.CASCADE,
+                                     related_name='registrations')
+    date_joined = models.DateField()
+
+    class Meta:
+        ordering = ('-date_joined',)
+
+    def __str__(self):
+        return self.client_number.last_name
 
 
 
