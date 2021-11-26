@@ -1,12 +1,12 @@
 from django import forms
 
 from apps.orders.models import Order
-from apps.rent.models import Property
+from apps.rent.models import Realty
 
 
 class OrderModelForm(forms.ModelForm):
-    _property = forms.ModelChoiceField(queryset=Property.objects.all(),
-                                  widget=forms.HiddenInput())
+    realty = forms.ModelChoiceField(queryset=Realty.objects.all(), widget=forms.HiddenInput())
+
     class Meta:
         model = Order
-        fields = ['_property', 'name', 'phone_number', 'comment']
+        fields = ['realty', 'name', 'phone_number', 'comment']

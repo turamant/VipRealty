@@ -1,7 +1,9 @@
 from django import forms
 
+from apps.rent.models import Lease
 
-class PropertyFilterForm(forms.Form):
+
+class RealtyFilterForm(forms.Form):
     min_rent = forms.FloatField(label='rent от', required=False)
     max_rent = forms.FloatField(label='rent до', required=False)
     min_rooms = forms.IntegerField(label='room от', required=False)
@@ -13,3 +15,8 @@ class PropertyFilterForm(forms.Form):
         ['-city', 'по городам'],
         ['-street', 'по улицам'],
     ])
+
+class LeaseCreateForm(forms.ModelForm):
+    class Meta:
+        model = Lease
+        fields = '__all__'

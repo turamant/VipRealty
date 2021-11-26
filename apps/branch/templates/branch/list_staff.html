@@ -1,32 +1,48 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<h3>List view staff</h3>
 <table>
-<tr>
-    <td>Имя</td>
-    <td>Фамилия</td>
-    <td>Должность</td>
-    <td>Пол</td>
-    <td>День рождения</td>
-    <td>Зарплата</td>
-    <td>Филиал</td>
-  </tr>
+        {% for person in staff %}
+            {% if forloop.counter|divisibleby:"8" %}
+                <tr width=250>
+            {% endif %}
+        <td>
+            <a href="{% url 'branch:detail_staff' person.pk %}" class="inline-flex text-white bg-indigo-500 border-2 py-0 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg">{{ person.staff_number }}</a>
+            {{ person.first_name }}
+            {{ person.last_name }}
+            {{ person.position }}
+            {{ person.sex }}
+            {{ person.date_of_birthday }}
+            {{ person.salary }}
+            {{ person.branch_number}}
+        </td>
+        {% if forloop.counter|divisibleby:"8" %}
+           </tr>
+        {% endif %}
+        {% endfor %}
+</table>
 
+
+
+<h3>List view staff </h3>
 {% for person in staff %}
-    <tr>
-<td><a href="{% url 'branch:detail_staff' person.pk %}">{{ person.staff_number }}</a>
+
+
+<div><a href="{% url 'branch:detail_staff' person.pk %}" class="inline-flex text-white bg-indigo-500 border-2 py-0 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg">{{ person.staff_number }}</a>
 {{ person.first_name }}
 {{ person.last_name }}
 {{ person.position }}
 {{ person.sex }}
-{{ person.date_of_birth }}
-    {{ person.salary }}</td>
-</tr>
+{{ person.date_of_birthday }}
+{{ person.salary }}
+{{ person.branch_number}}
+</div>
+
 {% endfor %}
 
-</table>
-<div>ИТОГО : {{ salary_all }}</div>
-
+<br/>
+{% if request.user.is_superuser %}
+<div>Зарплата всех сотрудников филиала : {{ salary_sum }} руб.</div>
+{% endif %}
 
 {% endblock %}

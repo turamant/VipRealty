@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add new lease</button>
+</form>
+
+<h3>List view leases</h3>
+{% for lease in leases %}
+<p><a href="{% url 'rent:detail_lease' lease.pk %}">{{ lease.lease_number }}</a></p>
+{% endfor %}
+
+{% endblock content %}

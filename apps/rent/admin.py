@@ -1,20 +1,20 @@
 from django.contrib import admin
 
-from apps.rent.models import PrivateOwner, Property, Room, Category, Street, City, Client, Lease, Payment, Viewing, \
-    Registration
+from apps.rent.models import Owner, Client, Lease, Viewing, Registration, Realty
 
 
-@admin.register(Property)
-class PropertyAdmin(admin.ModelAdmin):
-    list_display = ('property_number', 'street', 'city', 'postcode',
-                    'category', 'rooms', 'rent', 'owner_number')
+@admin.register(Realty)
+class RealtyAdmin(admin.ModelAdmin):
+    list_display = ('rent_status', 'realty_number', 'due_back', 'street', 'city', 'postcode',
+                    'category', 'rooms', 'rent', 'owner_number', 'staff_number',
+                    'branch_number')
 
-    prepopulated_fields = {'slug': ('property_number',)}
+    prepopulated_fields = {'slug': ('realty_number',)}
     search_fields = ('property_number', 'street', 'city', 'rooms')
 
 
-@admin.register(PrivateOwner)
-class PrivateOwnerAdmin(admin.ModelAdmin):
+@admin.register(Owner)
+class OwnerAdmin(admin.ModelAdmin):
     list_display = ('owner_number', 'first_name', 'last_name',
                     'address', 'tel_number')
 
@@ -24,13 +24,13 @@ class PrivateOwnerAdmin(admin.ModelAdmin):
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ('client_number', 'first_name', 'last_name',
-                    'tel_number', 'pref_type', 'max_rent')
+                    'tel_number', 'pref_category', 'pref_rooms', 'max_rent')
 
     prepopulated_fields = {'slug': ('client_number',)}
 
 @admin.register(Lease)
 class LeaseAdmin(admin.ModelAdmin):
-    list_display = ('lease_number', 'slug', 'property_number',
+    list_display = ('lease_number', 'realty_number', 'owner_number',
                     'client_number', 'rent', 'payment_method',
                     'deposit', 'paid', 'rent_start', 'rent_finish',
                     'duration')
@@ -39,7 +39,7 @@ class LeaseAdmin(admin.ModelAdmin):
 
 @admin.register(Viewing)
 class ViewingAdmin(admin.ModelAdmin):
-    list_display = ('client_number', 'property_number',
+    list_display = ('client_number', 'realty_number',
                     'view_date', 'comment')
 
 

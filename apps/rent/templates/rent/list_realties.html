@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+Поиск и сортировка
+<form action="" method="get">
+    {{ form.as_p }}
+    <button type="submit" class="inline-flex text-white bg-indigo-500 border-0">Поиск или сортировка</button>
+</form>
+<br/>
+<h3>List view realties</h3>
+{% for realty in realties %}
+<p><a href="{% url 'rent:detail_realty' realty.pk %}">{{ realty.street }},
+    {{ realty.city }}, {{ realty.rent }}</a></p>
+{% endfor %}
+<li><strong>Свободных квартир всего: </strong> {{ num_realty_free }}</li>
+
+{% endblock content %}

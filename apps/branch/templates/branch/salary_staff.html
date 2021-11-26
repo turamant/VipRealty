@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<h3>List view staff </h3>
+{% for person in staff %}
+
+<div><a href="{% url 'branch:detail_staff' person.pk %}" class="inline-flex text-white bg-indigo-500 border-2 py-0 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg">{{ person.staff_number }}</a>
+{{ person.first_name }}
+{{ person.last_name }}
+{{ person.salary }}
+</div>
+{% endfor %}
+
+<br/>
+<div>Зарплата всех сотрудников филиала : {{ salary_sum }} руб.</div>
+
+
+{% endblock %}
