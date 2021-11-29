@@ -1,6 +1,6 @@
 from django import forms
 
-from apps.rent.models import Lease
+from apps.rent.models import Lease, Viewing, Client
 
 
 class RealtyFilterForm(forms.Form):
@@ -20,3 +20,16 @@ class LeaseCreateForm(forms.ModelForm):
     class Meta:
         model = Lease
         fields = '__all__'
+
+
+class ViewingCreateForm(forms.ModelForm):
+    class Meta:
+        model = Viewing
+        fields = ('client_number', 'realty_number', 'view_date', 'comment')
+
+class ClientCreateForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['client_number', 'slug', 'first_name', 'last_name',
+                  'tel_number', 'pref_category', 'pref_rooms', 'max_rent']
+

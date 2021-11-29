@@ -15,7 +15,6 @@ class ExceededLimit(BaseException):
 
 
 def listview_staff(request):
-
     staff = Staff.objects.all()[:(LIMIT + 1)]
     if len(staff) > LIMIT:
         try:
@@ -24,8 +23,10 @@ def listview_staff(request):
             return render(request, 'branch/limit.html')
     if request.user.is_superuser:
         salary_all = Staff.objects.aggregate(Sum('salary'))
-    salary_sum = salary_all['salary__sum']
-    context = {'staff': staff, 'salary_sum': salary_sum}
+        salary_sum = salary_all['salary__sum']
+        context = {'staff': staff, 'salary_sum': salary_sum}
+    else:
+        context = {'staff': staff}
     return render(request, 'branch/list_staff.html', context)
 
 def listview_salary_staff(request):

@@ -2,7 +2,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <h3>List view leases</h3>
 {% for lease in leases %}
 <p><a href="{% url 'rent:detail_lease' lease.pk %}">{{ lease.lease_number }}</a></p>

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<hr>
 <h3>Detail</h3>
 <h3>Объект недвижимости</h3>
 <p><b>Номер в БД:</b>{{ realty.property_number }}</p>
@@ -11,7 +12,14 @@
 <p>комнаты: {{ realty.rooms }}</p>
 <p><b>цена ренты:</b> {{ realty.rent }}</p>
 <p>хозяин: {{ realty.owner_number }}</p>
-
+<p>Статус: {{ realty.rent_status }}</p>
+<hr>
+<h2>Все отзывы после просмотра этой квартиры</h2>
+{% for view in viewings %}
+<p>{{ view.view_date }}. {{ view.client_number }}:
+    {{ view.comment }}. {{ view.realty_number }}</p>
+{% endfor %}
+<hr>
 <h3>Заявка на эту квартиру от случайного клиента </h3>
 {% if sended %}
     Спасибо, ваша заявка принята!
@@ -20,7 +28,15 @@
     {% csrf_token %}
     {{ form.as_p}}
     <button type="submit">Отправить</button>
+</form>
 
+<hr>
+
+<h2>Оставить комментарий после просмотра этой квартиры</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ viewings_form.as_p }}
+    <input type="submit" value="Создать viewings comment">
 </form>
 
 {% endblock %}

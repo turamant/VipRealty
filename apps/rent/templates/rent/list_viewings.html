@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>List view viewings</h3>
+{% for view in viewings %}
+<p><a href="">{{ view.comment }}</a></p>
+Клиент: {{ view.client_number }},
+Недвижка: {{ view.realty_number }},
+Дата: {{ view.view_date }}
+{% endfor %}
+
+{% endblock content %}

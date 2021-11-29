@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<h3>List view clients</h3>
+{% for client in clients %}
+<p><a href="{% url 'rent:detail_client' client.pk %}">{{ client.last_name }}</a></p>
+{% endfor %}
+
+{% endblock content %}

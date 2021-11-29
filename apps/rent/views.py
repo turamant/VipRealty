@@ -1,18 +1,29 @@
-from django.http import HttpResponseRedirect
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 from apps.orders.forms import OrderModelForm
-from apps.rent.forms import RealtyFilterForm, LeaseCreateForm
-from apps.rent.models import Realty, Lease
+from apps.rent.forms import RealtyFilterForm, LeaseCreateForm, ViewingCreateForm, ClientCreateForm
+from apps.rent.models import Realty, Lease, Viewing, Client
 
 
 def main_rent(request):
     return render(request, 'rent/main_rent_page.html')
 
+
+def listview_viewings(request):
+    viewings = Viewing.objects.all()
+    context = {'viewings': viewings}
+    return render(request, 'rent/list_viewings.html', context)
+################################################
+
 def listview_realties(request):
-    realties = Realty.objects.filter(rent_status__exact='free')
-    num_realty_free = Realty.objects.filter(rent_status__exact='free').count()
+    if request.user.is_superuser:
+        realties = Realty.objects.all()
+        num_realty_free = Realty.objects.filter(rent_status__exact='free').count()
+    else:
+        realties = Realty.objects.filter(rent_status__exact='free')
+        num_realty_free = None
     form = RealtyFilterForm(request.GET)
     if form.is_valid():
         if form.cleaned_data['min_rent']:
@@ -33,6 +44,18 @@ def listview_realties(request):
 
 def detail_realty(request, id):
     realty = get_object_or_404(Realty, id=id)
+    viewings = realty.viewings.all()
+
+    if request.method == 'POST':
+        viewings_form = ViewingCreateForm(request.POST)
+        if viewings_form.is_valid():
+            viewings_form.save()
+            return redirect("{}?sended=True".format(reverse('rent:detail_realty',
+                                                            kwargs={"id": realty.id})))
+    else:
+        viewings_form = ViewingCreateForm()
+
+
     form = OrderModelForm(request.POST or None, initial={
         'realty': realty
     })
@@ -42,10 +65,12 @@ def detail_realty(request, id):
             return redirect("{}?sended=True".format(reverse('rent:detail_realty',
                                                             kwargs={"id": realty.id})))
     context = {'realty': realty,
+               'viewings': viewings,
                'form': form,
+               'viewings_form': viewings_form,
                'sended': request.GET.get("sended", False)}
     return render(request, 'rent/detail_realty.html', context)
-
+#############################################################################
 
 def create_lease(request):
     leases = Lease.objects.all()
@@ -64,9 +89,30 @@ def listview_leases(request):
     context = {'leases': leases}
     return render(request, 'rent/list_leases.html', context)
 
-
-
 def detail_lease(request, pk):
     lease = Lease.objects.get(pk=pk)
     context = {'lease': lease}
     return render(request, 'rent/detail_lease.html', context)
+
+
+def list_clients(request):
+    clients = Client.objects.all()
+    context = {'clients': clients}
+    return render(request, 'rent/list_clients.html', context)
+
+def detail_client(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    context = {'client': client}
+    return render(request, 'rent/detail_client.html', context)
+
+def create_client(request):
+    clients = Client.objects.all()
+    if request.method == 'POST':
+        form = ClientCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('rent:list_clients')
+    else:
+        form = ClientCreateForm()
+    context = {'clients': clients, 'form': form}
+    return render(request, 'rent/create_client.html', context)

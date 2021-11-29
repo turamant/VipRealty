@@ -5,17 +5,18 @@
         --><span class="ml-3 text-xl">Vip Realty</span>
       </a>
       <!--<nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">-->
+    <p><a href="{% url 'rent:list_realties' %}" class="mr-5 hover:text-gray-900">Вся Недвижимость</a></p>
         {% if not request.user.is_authenticated %}
           <a href="{% url 'signup' %}" class="mr-5 hover:text-gray-900">Signup</a>
         {% else %}
           {% if request.user.is_organisor %}
           <a href="{% url 'branch:list_staff' %}" class="mr-5 hover:text-gray-900">Сотрудники</a>
           {% endif %}
-          <p><a href="{% url 'rent:list_realties' %}" class="mr-5 hover:text-gray-900">Вся Недвижимость</a></p>
+
           <p><a href="{% url 'rent:list_leases' %}" class="mr-5 hover:text-gray-900">Все контракты</a></p>
 
           <p><a href="{% url 'rent:create_lease' %}" class="mr-5 hover:text-gray-900">Заключить контракт</a></p>
-
+          <p><a href="{% url 'rent:create_client' %}">Создать нового клиента</a></p>
 
   {% endif %}
       </nav>
