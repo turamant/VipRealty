@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from apps.rent.models import Owner, Client, Lease, Viewing, Registration, Realty
+from apps.rent.models import Owner, Client, Lease, Viewing, Registration, Realty, Images
+
+@admin.register(Images)
+class ImagesAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    prepopulated_fields = {'slug': ('title',)}
+    search_fields = ('title',)
 
 
 @admin.register(Realty)

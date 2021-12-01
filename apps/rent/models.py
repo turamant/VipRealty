@@ -6,6 +6,14 @@ from django.utils.text import slugify
 from apps.branch.models import Staff, Branch
 from apps.thesaurus.models import Street, City, Payment, Category, Room
 
+class Images(models.Model):
+    realty = models.ForeignKey('Realty', on_delete=models.CASCADE, related_name='images')
+    title = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250, unique=True)
+    img = models.ImageField(upload_to='images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title
 
 class Realty(models.Model):
     '''Realty - сущность недвижимость'''
@@ -18,7 +26,8 @@ class Realty(models.Model):
         ('rented', 'Сдана'),
         ('reserved', 'Зарезервирована'),
     )
-
+    image = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    description = models.TextField(max_length=500, blank=True, null=True)
     due_back = models.DateField('освободится', null=True, blank=True)
     rent_status = models.CharField('Статус', max_length=8, choices=RENT_STATUS, blank=True, default='free', help_text='Статус аренды')
     realty_number = models.CharField('Код объекта недвижимости', max_length=100, unique=True)
