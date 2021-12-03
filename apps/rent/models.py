@@ -1,3 +1,7 @@
+from io import BytesIO
+
+from PIL import Image
+from django.core.files import File
 from django.db import models
 
 # Отдел реализации
@@ -19,6 +23,8 @@ class Realty(models.Model):
     '''Realty - сущность недвижимость'''
     class Meta:
         db_table = 'realties'
+        verbose_name_plural = 'Объекты недвижимости'
+        verbose_name = 'объект недвижимости'
         ordering = ("due_back",)
 
     RENT_STATUS =(
@@ -27,33 +33,55 @@ class Realty(models.Model):
         ('reserved', 'Зарезервирована'),
     )
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
-    description = models.TextField(max_length=500, blank=True, null=True)
+    thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    description = models.TextField(help_text='описание краткое но емкое',max_length=500, blank=True, null=True)
     due_back = models.DateField('освободится', null=True, blank=True)
     rent_status = models.CharField('Статус', max_length=8, choices=RENT_STATUS, blank=True, default='free', help_text='Статус аренды')
     realty_number = models.CharField('Код объекта недвижимости', max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
-    street = models.ForeignKey(Street, on_delete=models.CASCADE,
+    street = models.ForeignKey(Street, on_delete=models.PROTECT,
                                related_name='realties', verbose_name='Улица')
-    city = models.ForeignKey(City, on_delete=models.CASCADE,
+    city = models.ForeignKey(City, on_delete=models.PROTECT,
                              related_name='realties', verbose_name='Город')
     postcode = models.CharField('Почтовый индекс', max_length=6)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+    category = models.ForeignKey(Category, on_delete=models.PROTECT,
                                  related_name='realties', verbose_name='Категория недвижимости')
-    rooms = models.ForeignKey(Room, on_delete=models.CASCADE,
+    rooms = models.ForeignKey(Room, on_delete=models.PROTECT,
                               related_name='realties', verbose_name='Количество комнат')
     rent = models.FloatField('Стоимость ренты')
-    owner_number = models.ForeignKey('Owner', on_delete=models.CASCADE,
+    owner_number = models.ForeignKey('Owner', on_delete=models.PROTECT,
                                      related_name='realties', verbose_name='Код владельца недвижимости')
-    staff_number = models.ForeignKey(Staff, on_delete=models.CASCADE,
+    staff_number = models.ForeignKey(Staff, on_delete=models.PROTECT,
                                      related_name='realties', verbose_name='Табельный номер сотрудника АН')
-    branch_number = models.ForeignKey(Branch, on_delete=models.CASCADE,
+    branch_number = models.ForeignKey(Branch, on_delete=models.PROTECT,
                                       related_name='realties', verbose_name='Код филиала')
-
-
-
 
     def __str__(self):
         return self.realty_number
+
+    def get_thumbnail(self):
+        if self.thumbnail:
+            return self.thumbnail.url
+        else:
+            if self.image:
+                self.thumbnail = self.make_thumbnail(self.image)
+                self.save()
+
+                return self.thumbnail.url
+            else:
+                return 'https://via.placeholder.com/240x180.jpg'
+
+    def make_thumbnail(self, image, size=(300, 200)):
+        img = Image.open(image)
+        img.convert('RGB')
+        img.thumbnail(size)
+
+        thumb_io = BytesIO()
+        img.save(thumb_io, 'JPEG', quality=85)
+
+        thumbnail = File(thumb_io, name=image.name)
+
+        return thumbnail
 
 
 

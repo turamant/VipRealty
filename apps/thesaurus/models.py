@@ -26,8 +26,10 @@ class Category(models.Model):
     '''Category - сущность категория недвижимости'''
     class Meta:
         db_table = 'categories'
+        ordering = ['ordering']
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=255, unique=True)
+    ordering = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name

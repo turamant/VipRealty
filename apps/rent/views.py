@@ -1,14 +1,46 @@
+import random
 
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 from apps.orders.forms import OrderModelForm
 from apps.rent.forms import RealtyFilterForm, LeaseCreateForm, ViewingCreateForm, ClientCreateForm
 from apps.rent.models import Realty, Lease, Viewing, Client
+from apps.thesaurus.models import Category
 
+
+def search(request):
+    query = request.GET.get('query', '')
+    realties = Realty.objects.filter(Q(description__icontains=query))
+
+    return render(request, 'rent/search.html', {'realties': realties, 'query': query})
 
 def main_rent(request):
     return render(request, 'rent/main_rent_page.html')
+
+def category(request, category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
+    return render(request, 'rent/category.html', {'category': category})
+
+def realty(request, category_slug, realty_slug):
+
+    realty = get_object_or_404(Realty, category__slug=category_slug, slug=realty_slug)
+
+
+    similar_realties = list(realty.category.realties.exclude(id=realty.id))
+
+
+    if len(similar_realties) >= 4:
+        similar_realties = random.sample(similar_realties, 4)
+
+    context = {
+        'realty': realty,
+        'similar_realties': similar_realties,
+    }
+
+    return render(request, 'rent/realty.html', context)
+
 
 
 def listview_viewings(request):

@@ -14,7 +14,7 @@ class StreetAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
+    list_display = ('name', 'slug', 'ordering')
     prepopulated_fields = {'slug': ('name',)}
 
 

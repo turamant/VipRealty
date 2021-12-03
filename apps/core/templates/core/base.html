@@ -30,7 +30,7 @@
             <div class="navbar-menu" id="main-navbar">
                 <div class="navbar-start">
                     <div class="navbar-item">
-                        <form method="get" action="">
+                        <form method="get" action="{% url 'rent:search' %}">
                             <div class="field has-addons">
                                 <div class="control">
                                     <input type="text" class="input" placeholder="Search..." name="query">
@@ -45,7 +45,7 @@
 
                 <div class="navbar-end">
                     {% for category in menu_categories %}
-                        <a href="" class="navbar-item">{{ category.title }}</a>
+                       <a href="{% url 'rent:category' category.slug %}" class="navbar-item">{{ category.name }}</a>
                     {% endfor %}
 
                     <a href="{% url 'core:contact' %}" class="navbar-item">Contact</a>

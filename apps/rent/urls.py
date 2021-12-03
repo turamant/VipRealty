@@ -1,12 +1,15 @@
 from django.urls import path
 
 from apps.rent.views import listview_leases, detail_lease, main_rent, listview_realties, \
-    detail_realty, create_lease, listview_viewings, list_clients, detail_client, create_client
+    detail_realty, create_lease, listview_viewings, list_clients, detail_client, create_client, category, realty, search
 
 app_name = 'rent'
 
 urlpatterns = [
+    path('search/', search, name='search'),
+
     path('', main_rent, name='main_rent'),
+
     path('realties/', listview_realties, name='list_realties'),
     path('realties/<int:id>/', detail_realty, name='detail_realty'),
 
@@ -19,5 +22,10 @@ urlpatterns = [
     path('clients/create/', create_client, name='create_client'),
     path('clients/', list_clients, name='list_clients'),
     path('clients/<int:pk>/', detail_client, name='detail_client'),
+
+
+    path('realties/<slug:category_slug>/<slug:realty_slug>/', realty, name='realty'),
+    path('realties/<slug:category_slug>/', category, name='category'),
+
 
 ]

@@ -9,11 +9,11 @@
         </figure>
     {% endif %}
                <div class="columns">
-                    <div class="column is-8 is-offset-2">
+                    <div class="column is-14 is-offset-0">
                         <div class="content is-medium">
                             {% for image in realty.images.all %}
                             {% if image.img %}
-                               <img src="{{ image.img.url }}" width="245" height="200">
+                               <img src="{{ image.img.url }}" width="265" height="200">
                             {% endif %}
                             {% endfor %}
                         </div>
