@@ -19,14 +19,52 @@ def search(request):
 def main_rent(request):
     return render(request, 'rent/main_rent_page.html')
 
+
 def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
-    return render(request, 'rent/category.html', {'category': category})
+    realties = category.realties.all()
+    form = RealtyFilterForm(request.GET)
+    if form.is_valid():
+        if form.cleaned_data['type_realty']:
+            realties = realties.filter(type_realty__name=form.cleaned_data['type_realty'])
+        if form.cleaned_data['min_rent']:
+            realties = realties.filter(rent__gte=form.cleaned_data['min_rent'])
+        if form.cleaned_data['max_rent']:
+            realties = realties.filter(rent__lte=form.cleaned_data['max_rent'])
+        if form.cleaned_data['min_rooms']:
+            realties = realties.filter(rooms__gte=form.cleaned_data['min_rooms'])
+        if form.cleaned_data['max_rooms']:
+            realties = realties.filter(rooms__lte=form.cleaned_data['max_rooms'])
+
+        if form.cleaned_data['ordering']:
+            realties = realties.order_by(form.cleaned_data['ordering'])
+
+    context = {'category': category, 'realties': realties, 'form': form}
+    return render(request, 'rent/category.html', context)
+
 
 def realty(request, category_slug, realty_slug):
 
     realty = get_object_or_404(Realty, category__slug=category_slug, slug=realty_slug)
+    viewings = realty.viewings.all()
 
+    if request.method == 'POST':
+        viewings_form = ViewingCreateForm(request.POST)
+        if viewings_form.is_valid():
+            viewings_form.save()
+            return redirect("{}?sended=True".format(reverse('rent:detail_realty',
+                                                            kwargs={"id": realty.id})))
+    else:
+        viewings_form = ViewingCreateForm()
+
+    form = OrderModelForm(request.POST or None, initial={
+        'realty': realty
+    })
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect("{}?sended=True".format(reverse('rent:detail_realty',
+                                                            kwargs={"id": realty.id})))
 
     similar_realties = list(realty.category.realties.exclude(id=realty.id))
 
@@ -34,12 +72,15 @@ def realty(request, category_slug, realty_slug):
     if len(similar_realties) >= 4:
         similar_realties = random.sample(similar_realties, 4)
 
-    context = {
-        'realty': realty,
-        'similar_realties': similar_realties,
-    }
+    context = {'realty': realty,
+               'viewings': viewings,
+               'similar_realties': similar_realties,
+               'form': form,
+               'viewings_form': viewings_form,
+               'sended': request.GET.get("sended", False)}
+    return render(request, 'rent/detail_realty.html', context)
 
-    return render(request, 'rent/realty.html', context)
+
 
 
 
@@ -94,9 +135,15 @@ def detail_realty(request, id):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect("{}?sended=True".format(reverse('rent:detail_realty',
-                                                            kwargs={"id": realty.id})))
+            return redirect("{}?sended=True".format(reverse('rent:detail_realty', kwargs={"id": realty.id})))
+
+    similar_realties = list(realty.category.realties.exclude(id=realty.id))
+
+    if len(similar_realties) >= 4:
+        similar_realties = random.sample(similar_realties, 4)
+
     context = {'realty': realty,
+               'similar_realties': similar_realties,
                'viewings': viewings,
                'form': form,
                'viewings_form': viewings_form,

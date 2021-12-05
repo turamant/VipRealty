@@ -20,7 +20,7 @@
                 </div>
             </div>
             <footer class="card-footer">
-                <a href="{% url 'rent:detail_realty' realty.pk %}" class="card-footer-item">
+                <a href="{{ realty.get_absolute_url }}" class="card-footer-item">
                     View
                 </a>
 

@@ -1,7 +1,8 @@
 from django.urls import path
 
 from apps.rent.views import listview_leases, detail_lease, main_rent, listview_realties, \
-    detail_realty, create_lease, listview_viewings, list_clients, detail_client, create_client, category, realty, search
+    detail_realty, create_lease, listview_viewings, list_clients, detail_client, create_client, category, realty, \
+    search
 
 app_name = 'rent'
 
@@ -26,6 +27,5 @@ urlpatterns = [
 
     path('realties/<slug:category_slug>/<slug:realty_slug>/', realty, name='realty'),
     path('realties/<slug:category_slug>/', category, name='category'),
-
 
 ]

@@ -1,17 +1,39 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-Поиск и сортировка
+<h3>Поиск и сортировка!</h3>
 <form action="" method="get">
-    {{ form.as_p }}
+    {{ form.as_table }}
     <button type="submit" class="inline-flex text-white bg-indigo-500 border-0">Поиск или сортировка</button>
 </form>
 <br/>
-<h3>List view realties</h3>
-{% for realty in realties %}
-<p><a href="{% url 'rent:detail_realty' realty.pk %}">{{ realty.street }},
-    {{ realty.city }}, {{ realty.rent }}</a></p>
-{% endfor %}
+<div class="columns is-multiline">
+    {% for realty in realties %}
+    <div class="column is-3">
+        <div class="card">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="title is-4">{{ realty.city }}</p>
+                        <p>{{ realty.realty_number }}</p>
+                        {% if realty.image %}
+                <img src="{{ realty.image.url }}" alt="" height="200" width="300"/>
+                        {% endif %}
+                        <p class="subtitle is-6">{{ realty.rent }}</p>
+                    </div>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a href="{{ realty.get_absolute_url }}" class="card-footer-item">
+                    View
+                </a>
+
+            </footer>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 <li><strong>Свободных квартир всего: </strong> {{ num_realty_free }}</li>
 
 

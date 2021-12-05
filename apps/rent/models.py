@@ -5,12 +5,18 @@ from django.core.files import File
 from django.db import models
 
 # Отдел реализации
+from django.urls import reverse
 from django.utils.text import slugify
 
 from apps.branch.models import Staff, Branch
-from apps.thesaurus.models import Street, City, Payment, Category, Room
+from apps.thesaurus.models import Street, City, Payment, Category, Room, TypeRealty
+
 
 class Images(models.Model):
+    '''Images - сущность фотки недвижимости'''
+    class Meta:
+        db_table = 'images'
+
     realty = models.ForeignKey('Realty', on_delete=models.CASCADE, related_name='images')
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique=True)
@@ -39,25 +45,33 @@ class Realty(models.Model):
     rent_status = models.CharField('Статус', max_length=8, choices=RENT_STATUS, blank=True, default='free', help_text='Статус аренды')
     realty_number = models.CharField('Код объекта недвижимости', max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
-    street = models.ForeignKey(Street, on_delete=models.PROTECT,
+    street = models.ForeignKey(Street, on_delete=models.CASCADE,
                                related_name='realties', verbose_name='Улица')
-    city = models.ForeignKey(City, on_delete=models.PROTECT,
+    city = models.ForeignKey(City, on_delete=models.CASCADE,
                              related_name='realties', verbose_name='Город')
     postcode = models.CharField('Почтовый индекс', max_length=6)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT,
-                                 related_name='realties', verbose_name='Категория недвижимости')
-    rooms = models.ForeignKey(Room, on_delete=models.PROTECT,
+    type_realty = models.ForeignKey(TypeRealty, on_delete=models.CASCADE,
+                                    related_name='realties', verbose_name='тип недвижки')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                 related_name='realties', verbose_name='Действия с недвижимостью')
+    rooms = models.ForeignKey(Room, on_delete=models.CASCADE,
                               related_name='realties', verbose_name='Количество комнат')
     rent = models.FloatField('Стоимость ренты')
-    owner_number = models.ForeignKey('Owner', on_delete=models.PROTECT,
+    owner_number = models.ForeignKey('Owner', on_delete=models.CASCADE,
                                      related_name='realties', verbose_name='Код владельца недвижимости')
-    staff_number = models.ForeignKey(Staff, on_delete=models.PROTECT,
+    staff_number = models.ForeignKey(Staff, on_delete=models.CASCADE,
                                      related_name='realties', verbose_name='Табельный номер сотрудника АН')
-    branch_number = models.ForeignKey(Branch, on_delete=models.PROTECT,
+    branch_number = models.ForeignKey(Branch, on_delete=models.CASCADE,
                                       related_name='realties', verbose_name='Код филиала')
 
     def __str__(self):
-        return self.realty_number
+        return str(self.rent)
+
+    def get_absolute_url(self):
+        return reverse('rent:detail_realty', kwargs={'id': self.pk})
+
+
+
 
     def get_thumbnail(self):
         if self.thumbnail:
@@ -110,7 +124,7 @@ class Client(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     tel_number = models.CharField(max_length=12)
-    pref_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='clients')
+    pref_category = models.ForeignKey(TypeRealty, on_delete=models.CASCADE, related_name='clients')
     pref_rooms = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='clients')
     max_rent = models.FloatField()
 

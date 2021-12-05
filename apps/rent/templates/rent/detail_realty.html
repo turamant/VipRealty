@@ -23,22 +23,8 @@
     <h1 class="title">{{ realty.street }}, цена {{ realty.rent }} руб.</h1>
 
     <p class="mb-6"><span class="tag is-dark">{{ realty.staff_number }}</span></p>
-
+    <p class="mb-6"><span class="tag is-dark">Количество коимнат: {{ realty.rooms }}</span></p>
     <p>{{ realty.description }}</p>
-
-    {% if similar_products %}
-        <hr>
-
-        <div class="columns is-multiline">
-            <div class="column is-12">
-                <h2 class="subtitle">Similar products</h2>
-            </div>
-
-        </div>
-    {% endif %}
-
-
-
 
 <hr>
 <h2 class="title">Все отзывы после просмотра этой квартиры</h2>
@@ -69,6 +55,20 @@
     {{ viewings_form.as_p }}
     <input type="submit" value="Создать viewings comment">
 </form>
+
+<hr>
+{% if similar_realties %}
+        <hr>
+
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <h2 class="subtitle">Похожие объекты</h2>
+            </div>
+               {% for realty in similar_realties %}
+                 {% include 'rent/parts/list_item.html' %}
+               {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}
 
 

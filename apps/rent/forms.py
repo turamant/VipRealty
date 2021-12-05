@@ -1,13 +1,17 @@
 from django import forms
 
 from apps.rent.models import Lease, Viewing, Client
+from apps.thesaurus.models import TypeRealty
 
 
 class RealtyFilterForm(forms.Form):
+    type_realty = forms.ModelChoiceField(queryset=TypeRealty.objects.all(), label='Тип недвижимости')
+
     min_rent = forms.FloatField(label='rent от', required=False)
     max_rent = forms.FloatField(label='rent до', required=False)
     min_rooms = forms.IntegerField(label='room от', required=False)
     max_rooms = forms.IntegerField(label='room до', required=False)
+
     ordering = forms.ChoiceField(label='сортировка', required=False, choices=[
         ['rooms', 'по количеству комнат'],
         ['rent', 'дешевые сверху'],

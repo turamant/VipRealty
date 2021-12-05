@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from apps.thesaurus.models import City, Street, Category, Room, Payment, Position
+from apps.thesaurus.models import City, Street, Category, Room, Payment, Position, TypeRealty
+
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
@@ -15,6 +16,11 @@ class StreetAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'ordering')
+    prepopulated_fields = {'slug': ('name',)}
+
+@admin.register(TypeRealty)
+class TypeRealtyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
     prepopulated_fields = {'slug': ('name',)}
 
 
