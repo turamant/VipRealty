@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Branch admin | {% endblock %}
+
+{% block content %}
+    <div class="box">
+        <h1 class="title">Branch admin - {{ branch.name }}</h1>
+
+        <hr>
+
+        <a href="{% url 'branch:logout' %}" class="button is-danger is-outlined">Log out</a>
+    </div>
+
+
+    <div class="box">
+        <h2 class="is-size-3 mb-4">Мои объекты недвижимости</h2>
+
+        <p>Добавить новый объект:</p>
+        <a href="{% url 'branch:add_realty' %}"
+           class="button is-info is-outlined mb-6">
+            Add realty
+        </a>
+        {% if realties %}
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Номер объекта</th>
+                        <th>Вид действия</th>
+                        <th>Картинка</th>
+                        <th>Цена</th>
+                        <th>Редактировать</th>
+                        <th>Удалить</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for realty in realties %}
+                        <tr>
+                            <td><a href="{% url 'rent:realty' realty.category.slug realty.slug %}"
+                                   class="button is-info is-outlined mb-4">
+                                {{ realty.realty_number }}
+                            </a></td>
+                             <td>{{ realty.category }}</td>
+                            <td><a href="{% url 'rent:realty' realty.category.slug realty.slug %}">
+                                <figure class="image is-4by3 mb-4">
+                                    <img src="{{ realty.get_thumbnail }}">
+                                </figure>
+                            </a></td>
+                            <td>{{ realty.rent }} руб.</td>
+                            <td><a href="{% url 'branch:edit_realty' realty.category.slug realty.slug %}"
+                                   class="button is-success is-outlined mb-4">
+                                Edit realty
+                            </a></td>
+                            <td><a href="{% url 'branch:delete_realty' realty.category.slug realty.slug %}"
+                                   class="button is-danger is-outlined mb-4">
+                                Delete realty
+                            </a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You don't have any realty yet...</p>
+        {% endif %}
+    </div>
+{% endblock %}

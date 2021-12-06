@@ -3,30 +3,12 @@
 {% block title %}Welcome | {% endblock %}
 
 {% block content %}
+{% if branch %}
+   <h1 class="title">Все объекты агентства- {{ branch }}</h1>
+{% endif %}
 <div class="columns is-multiline">
     {% for realty in realties %}
-    <div class="column is-3">
-        <div class="card">
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-content">
-                        <p class="title is-4">{{ realty.city }}</p>
-                        <p>{{ realty.realty_number }}</p>
-                        {% if realty.image %}
-                <img src="{{ realty.image.url }}" alt="" height="200" width="300"/>
-                        {% endif %}
-                        <p class="subtitle is-6">{{ realty.rent }}</p>
-                    </div>
-                </div>
-            </div>
-            <footer class="card-footer">
-                <a href="{{ realty.get_absolute_url }}" class="card-footer-item">
-                    View
-                </a>
-
-            </footer>
-        </div>
-    </div>
+        {% include 'rent/parts/list_item.html' %}
     {% endfor %}
 </div>
 

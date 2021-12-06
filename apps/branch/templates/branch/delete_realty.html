@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Delete realty | {% endblock %}
+
+{% block content %}
+    <h1 class="title">Delete realty</h1>
+    <a href="{% url 'branch:branch_admin' %}">Go back to branch_admin</a>
+    </div>
+    <h1>Are you sure you want to delete this lead?</h1>
+    <form method="post" class="mt-5">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Submit</button>
+        <button type="submit" name="cancel">Cancel</button>
+    </form>
+</div>
+{% endblock content %}

@@ -70,20 +70,14 @@ class Realty(models.Model):
     def get_absolute_url(self):
         return reverse('rent:detail_realty', kwargs={'id': self.pk})
 
-
-
-
     def get_thumbnail(self):
-        if self.thumbnail:
+        if self.image:
+            self.thumbnail = self.make_thumbnail(self.image)
+            self.save()
+
             return self.thumbnail.url
         else:
-            if self.image:
-                self.thumbnail = self.make_thumbnail(self.image)
-                self.save()
-
-                return self.thumbnail.url
-            else:
-                return 'https://via.placeholder.com/240x180.jpg'
+            return 'https://via.placeholder.com/240x180.jpg'
 
     def make_thumbnail(self, image, size=(300, 200)):
         img = Image.open(image)

@@ -4,8 +4,8 @@
 
 {% block content %}
     {% if realty.image %}
-        <figure class="image is-4by3 mb-6">
-            <img src="{{ realty.image.url}}">
+        <figure class="image is-4by3 mb-4">
+            <img src="{{ realty.get_thumbnail }}">
         </figure>
     {% endif %}
                <div class="columns">
@@ -22,9 +22,12 @@
 
     <h1 class="title">{{ realty.street }}, цена {{ realty.rent }} руб.</h1>
 
-    <p class="mb-6"><span class="tag is-dark">{{ realty.staff_number }}</span></p>
-    <p class="mb-6"><span class="tag is-dark">Количество коимнат: {{ realty.rooms }}</span></p>
+    <p class="mb-6">Агенство: <span class="tag is-dark">{{ realty.branch_number }}</span></p>
+    <p class="mb-6">Количество коимнат: <span class="tag is-dark">{{ realty.rooms }}</span></p>
+    <p class="mb-6">Вид сделки: <span class="tag is-dark">{{ realty.category }}</span></p>
+
     <p>{{ realty.description }}</p>
+
 
 <hr>
 <h2 class="title">Все отзывы после просмотра этой квартиры</h2>

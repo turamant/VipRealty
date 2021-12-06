@@ -17,10 +17,12 @@ def search(request):
     return render(request, 'rent/search.html', {'realties': realties, 'query': query})
 
 def main_rent(request):
+    ''' использую '''
     return render(request, 'rent/main_rent_page.html')
 
 
 def category(request, category_slug):
+    ''' использую '''
     category = get_object_or_404(Category, slug=category_slug)
     realties = category.realties.all()
     form = RealtyFilterForm(request.GET)
@@ -44,7 +46,7 @@ def category(request, category_slug):
 
 
 def realty(request, category_slug, realty_slug):
-
+    ''' использую '''
     realty = get_object_or_404(Realty, category__slug=category_slug, slug=realty_slug)
     viewings = realty.viewings.all()
 
@@ -52,8 +54,9 @@ def realty(request, category_slug, realty_slug):
         viewings_form = ViewingCreateForm(request.POST)
         if viewings_form.is_valid():
             viewings_form.save()
-            return redirect("{}?sended=True".format(reverse('rent:detail_realty',
-                                                            kwargs={"id": realty.id})))
+            return redirect("{}?sended=True".format(reverse('rent:realty',
+                                                            kwargs={"category_slug": category_slug,
+                                                                    "realty_slug": realty.slug})))
     else:
         viewings_form = ViewingCreateForm()
 
@@ -63,8 +66,9 @@ def realty(request, category_slug, realty_slug):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect("{}?sended=True".format(reverse('rent:detail_realty',
-                                                            kwargs={"id": realty.id})))
+            return redirect("{}?sended=True".format(reverse('rent:realty',
+                                                            kwargs={"category_slug": category_slug,
+                                                                    "realty_slug": realty.slug})))
 
     similar_realties = list(realty.category.realties.exclude(id=realty.id))
 
@@ -80,40 +84,7 @@ def realty(request, category_slug, realty_slug):
                'sended': request.GET.get("sended", False)}
     return render(request, 'rent/detail_realty.html', context)
 
-
-
-
-
-def listview_viewings(request):
-    viewings = Viewing.objects.all()
-    context = {'viewings': viewings}
-    return render(request, 'rent/list_viewings.html', context)
-################################################
-
-def listview_realties(request):
-    if request.user.is_superuser:
-        realties = Realty.objects.all()
-        num_realty_free = Realty.objects.filter(rent_status__exact='free').count()
-    else:
-        realties = Realty.objects.filter(rent_status__exact='free')
-        num_realty_free = None
-    form = RealtyFilterForm(request.GET)
-    if form.is_valid():
-        if form.cleaned_data['min_rent']:
-            realties= realties.filter(rent__gte=form.cleaned_data['min_rent'])
-        if form.cleaned_data['max_rent']:
-            realties = realties.filter(rent__lte=form.cleaned_data['max_rent'])
-        if form.cleaned_data['min_rooms']:
-            realties = realties.filter(rooms__gte=form.cleaned_data['min_rooms'])
-        if form.cleaned_data['max_rooms']:
-            realties = realties.filter(rooms__lte=form.cleaned_data['max_rooms'])
-
-        if form.cleaned_data['ordering']:
-            realties = realties.order_by(form.cleaned_data['ordering'])
-
-    context = {'realties': realties, 'form': form, 'num_realty_free': num_realty_free}
-    return render(request, 'rent/list_realties.html', context)
-
+#######################################
 
 def detail_realty(request, id):
     realty = get_object_or_404(Realty, id=id)
@@ -150,6 +121,33 @@ def detail_realty(request, id):
                'sended': request.GET.get("sended", False)}
     return render(request, 'rent/detail_realty.html', context)
 #############################################################################
+
+
+def listview_realties(request):
+    if request.user.is_superuser:
+        realties = Realty.objects.all()
+        num_realty_free = Realty.objects.filter(rent_status__exact='free').count()
+    else:
+        realties = Realty.objects.filter(rent_status__exact='free')
+        num_realty_free = None
+    form = RealtyFilterForm(request.GET)
+    if form.is_valid():
+        if form.cleaned_data['min_rent']:
+            realties= realties.filter(rent__gte=form.cleaned_data['min_rent'])
+        if form.cleaned_data['max_rent']:
+            realties = realties.filter(rent__lte=form.cleaned_data['max_rent'])
+        if form.cleaned_data['min_rooms']:
+            realties = realties.filter(rooms__gte=form.cleaned_data['min_rooms'])
+        if form.cleaned_data['max_rooms']:
+            realties = realties.filter(rooms__lte=form.cleaned_data['max_rooms'])
+
+        if form.cleaned_data['ordering']:
+            realties = realties.order_by(form.cleaned_data['ordering'])
+
+    context = {'realties': realties, 'form': form, 'num_realty_free': num_realty_free}
+    return render(request, 'rent/list_realties.html', context)
+
+
 
 def create_lease(request):
     leases = Lease.objects.all()

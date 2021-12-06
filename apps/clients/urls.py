@@ -8,8 +8,8 @@ from apps.branch.views import listview_staff, detail_staff, listview_salary_staf
 app_name = 'branch'
 
 urlpatterns = [
-    path('become-branch/', become_branch, name='become_branch'),
-    path('branch-admin/', branch_admin, name='branch_admin'),
+    path('become-client/', become_client, name='become_client'),
+    path('client-admin/', client_admin, name='client_admin'),
 
     path('add-realty/', add_realty, name='add_realty'),
     path('update/<slug:category_slug>/<slug:slug>/', edit_realty, name='edit_realty'),

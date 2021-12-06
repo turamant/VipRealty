@@ -3,10 +3,10 @@
         <figure class="image is-4by3 mb-4">
             <img src="{{ realty.get_thumbnail }}">
         </figure>
+        <h2 class="subtitle">{{ realty.city }}</h2>
+        <h3 class="subtitle"><a href="{% url 'branch:branch_list' %}">{{ realty.branch_number }}</a>, {{ realty.category }}</h3>
 
-        <h2 class="subtitle">{{ realty.realty_number }}</h2>
-
-        <h3 class="price is-size-6 mb-5">{{ realty.rent }} руб.</h3>
+        <h3 class="price is-size-6 mb-5">{{ realty.rent }}## руб.</h3>
 
         <hr>
 

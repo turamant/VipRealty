@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+{% block title %}Become branch | {% endblock %}
+
+{% block content %}
+    <h1 class="title">Все объекты агентства- {{ branch }}</h1>
+
+{% for realty in realties %}
+    {% include 'rent/parts/list_item.html' %}
+{% endfor %}
+
+{% endblock %}

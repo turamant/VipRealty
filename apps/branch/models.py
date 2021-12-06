@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 from apps.thesaurus.models import Street, City, Position
@@ -7,15 +8,17 @@ class Branch(models.Model):
     '''Branch - сущность филиал агенства недвижимости'''
     class Meta:
         db_table = 'branchs'
-        ordering = ('street',)
+        ordering = ('name',)
 
-    branch_number = models.CharField('Филиал', max_length=100, unique=True)
-    street = models.ForeignKey(Street, on_delete=models.CASCADE, related_name='branchs')
-    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='branchs')
-    postcode = models.CharField('Почтовый индекс', max_length=6)
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.OneToOneField(User, related_name='branch', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
-        return self.branch_number
+        return self.name
 
 class Staff(models.Model):
     '''Staff - сущность персонал агентства недвижимости '''
@@ -38,7 +41,7 @@ class Staff(models.Model):
     sex = models.CharField('Пол', max_length=10, choices=CHOICES_STATUS, default=MAN)
     date_of_birthday = models.DateField('Дата рожения')
     salary = models.FloatField('Зарплата')
-    branch_number = models.ForeignKey(Branch, on_delete=models.CASCADE,
+    branch_name = models.ForeignKey(Branch, on_delete=models.CASCADE,
                                       related_name='staffs')
 
     def __str__(self):
