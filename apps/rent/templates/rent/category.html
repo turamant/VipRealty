@@ -1,14 +1,9 @@
 {% extends 'core/base.html' %}
+{% load bulma_tags %}
 
 {% block title %}{{ category.name }} | {% endblock %}
 
 {% block content %}
-<h2 class="title is-4">Поиск и сортировка</h2>
-<form action="" method="get">
-    {{ form.as_p }}
-    <button type="submit" class="inline-flex text-white bg-indigo-500 border-0">Поиск или сортировка</button>
-</form>
-<br/>
     <div class="columns is-multiline mb-6">
         <div class="column is-12 has-text-centered mt-6 mb-6">
             <h2 class="is-size-3">{{ category.name }}</h2>
@@ -18,4 +13,11 @@
                 {% include 'rent/parts/list_item.html' %}
         {% endfor %}
     </div>
+<h2 class="title is-4">Поиск и сортировка</h2>
+<form action="" method="get">
+    {{ form|bulma }}
+    <div class="field">
+     <button type="submit" class="button is-primary">Поиск или сортировка</button>
+   </div>
+</form>
 {% endblock %}

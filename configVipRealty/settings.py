@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'apps.rent',
     'apps.thesaurus',
 
+    'bulma',
+
 
 ]
 

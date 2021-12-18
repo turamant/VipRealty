@@ -10,6 +10,8 @@ from apps.rent.models import Realty, Lease, Viewing, Client
 from apps.thesaurus.models import Category
 
 
+
+
 def search(request):
     query = request.GET.get('query', '')
     realties = Realty.objects.filter(Q(description__icontains=query))

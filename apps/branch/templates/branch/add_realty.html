@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
 
+{% load bulma_tags %}
+
 {% block title %}Add realty | {% endblock %}
 
 {% block content %}
@@ -7,7 +9,9 @@
 
     <form method="post" action="." enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        <table border="1">
+        {{ form }}
+        </table>
 
         <div class="field">
             <div class="control">
